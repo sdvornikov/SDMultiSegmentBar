@@ -19,7 +19,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    self.multiSegmentBar.progressSegmentColors = @[[UIColor redColor],[UIColor greenColor],[UIColor yellowColor]];
+    self.multiSegmentBar.progressSegments = @[@0.1,@0.3,@0.07];
+    self.multiSegmentBar.markPosition = 0.47;
 }
 
 

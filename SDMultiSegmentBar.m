@@ -33,11 +33,6 @@
 
 - (void) setup {
     self.contentMode = UIViewContentModeRedraw;
-    
-    // test values !!!
-    self.progressSegmentColors = @[[UIColor redColor],[UIColor greenColor],[UIColor yellowColor]];
-    self.progressSegments = @[@0.1,@0.3,@0.07];
-    self.markPosition = 0.47;
 }
 
 - (void)setMarkPosition:(float)markPosition {
