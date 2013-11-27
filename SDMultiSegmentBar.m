@@ -36,14 +36,14 @@
 }
 
 - (void)setMarkPosition:(float)markPosition {
-    if (markPosition == _markPosition) {
-        return;
-    }
     if (markPosition < 0) {
-        _markPosition = 0;
+        markPosition = 0;
     }
     if (markPosition > 1) {
-        _markPosition = 1;
+        markPosition = 1;
+    }
+    if (markPosition == _markPosition) {
+        return;
     }
     _markPosition = markPosition;
     [self setNeedsDisplay];
