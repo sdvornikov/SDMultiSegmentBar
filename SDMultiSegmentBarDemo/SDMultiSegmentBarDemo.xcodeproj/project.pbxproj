@@ -22,6 +22,7 @@
 		A538E00418432A0D00A935B0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = A538E00218432A0D00A935B0 /* InfoPlist.strings */; };
 		A538E00618432A0D00A935B0 /* SDMultiSegmentBarDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = A538E00518432A0D00A935B0 /* SDMultiSegmentBarDemoTests.m */; };
 		A538E01218432A4300A935B0 /* SDMultiSegmentBar.m in Sources */ = {isa = PBXBuildFile; fileRef = A538E01018432A4300A935B0 /* SDMultiSegmentBar.m */; };
+		A589C2B51849DA750011FA34 /* SDBarSegment.m in Sources */ = {isa = PBXBuildFile; fileRef = A589C2B41849DA750011FA34 /* SDBarSegment.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,7 +57,8 @@
 		A538E00518432A0D00A935B0 /* SDMultiSegmentBarDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SDMultiSegmentBarDemoTests.m; sourceTree = "<group>"; };
 		A538E00F18432A4300A935B0 /* SDMultiSegmentBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDMultiSegmentBar.h; path = ../../SDMultiSegmentBar.h; sourceTree = "<group>"; };
 		A538E01018432A4300A935B0 /* SDMultiSegmentBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDMultiSegmentBar.m; path = ../../SDMultiSegmentBar.m; sourceTree = "<group>"; };
-		A538E01118432A4300A935B0 /* SDMultiSegmentBarDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDMultiSegmentBarDelegate.h; path = ../../SDMultiSegmentBarDelegate.h; sourceTree = "<group>"; };
+		A589C2B31849DA750011FA34 /* SDBarSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SDBarSegment.h; path = ../../SDBarSegment.h; sourceTree = "<group>"; };
+		A589C2B41849DA750011FA34 /* SDBarSegment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SDBarSegment.m; path = ../../SDBarSegment.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,7 +164,8 @@
 			children = (
 				A538E00F18432A4300A935B0 /* SDMultiSegmentBar.h */,
 				A538E01018432A4300A935B0 /* SDMultiSegmentBar.m */,
-				A538E01118432A4300A935B0 /* SDMultiSegmentBarDelegate.h */,
+				A589C2B31849DA750011FA34 /* SDBarSegment.h */,
+				A589C2B41849DA750011FA34 /* SDBarSegment.m */,
 			);
 			name = SDMultiSegmentBar;
 			sourceTree = "<group>";
@@ -265,6 +268,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A538E01218432A4300A935B0 /* SDMultiSegmentBar.m in Sources */,
+				A589C2B51849DA750011FA34 /* SDBarSegment.m in Sources */,
 				A538DFF118432A0D00A935B0 /* ViewController.m in Sources */,
 				A538DFEB18432A0D00A935B0 /* AppDelegate.m in Sources */,
 				A538DFE718432A0D00A935B0 /* main.m in Sources */,
@@ -476,6 +480,7 @@
 				A538E00B18432A0D00A935B0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		A538E00C18432A0D00A935B0 /* Build configuration list for PBXNativeTarget "SDMultiSegmentBarDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -484,6 +489,7 @@
 				A538E00E18432A0D00A935B0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

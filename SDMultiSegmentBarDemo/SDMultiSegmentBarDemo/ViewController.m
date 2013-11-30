@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "SDMultiSegmentBar.h"
 
-@interface ViewController ()
+@interface ViewController () <SDMultiSegmentBarDelegate>
 @property (weak, nonatomic) IBOutlet SDMultiSegmentBar *multiSegmentBar;
 
 @end
@@ -19,10 +19,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.multiSegmentBar.progressSegmentColors = @[[UIColor redColor],[UIColor greenColor],[UIColor yellowColor]];
-    self.multiSegmentBar.progressSegments = @[@0.1,@0.3,@0.07];
-    self.multiSegmentBar.markPosition = 0.47;
+    self.multiSegmentBar.delegate = self;
+    [self.multiSegmentBar setSegments:@[[SDBarSegment barSegmentWithValue:0.1 color:[UIColor redColor]],
+                                        [SDBarSegment barSegmentWithValue:0.3 color:[UIColor greenColor]],
+                                        [SDBarSegment barSegmentWithValue:0.07 color:[UIColor yellowColor]]]];
+    //self.multiSegmentBar.markPosition = 0.47;
+    self.multiSegmentBar.markStyle = SDMultiSegmentBarMarkStylePannable;
 }
 
+- (NSString*) annotationTextForMarkPosition:(float)position {
+    return [NSString stringWithFormat:@"*** %i ***",(int)(position*100)];
+}
 
 @end

@@ -8,10 +8,18 @@
 
 @interface SDMultiSegmentBar()
 
+@property (strong,nonatomic) NSMutableArray *privateSegments;
+
 @property (readonly,nonatomic) CGFloat widthScaleFactor;
 @property (readonly,nonatomic) CGFloat topOffset;
 @property (readonly,nonatomic) CGFloat bottomOffset;
 @property (readonly,nonatomic) CGFloat markXPosition;
+
+@property (nonatomic) CGFloat privateMarkPosition;
+@property (nonatomic) BOOL displayAnnotation;
+@property (readonly,nonatomic) UIColor *borderColor;
+@property (readonly,nonatomic) UIColor *emptyBarColor;
+
 @end
 
 @implementation SDMultiSegmentBar
@@ -36,16 +44,38 @@
 }
 
 - (void)setMarkPosition:(float)markPosition {
-    if (markPosition < 0) {
-        markPosition = 0;
+    _markPosition = markPosition;
+    self.privateMarkPosition = markPosition;
+}
+
+- (NSMutableArray *)privateSegments {
+    if (!_privateSegments) {
+        _privateSegments = [NSMutableArray array];
     }
-    if (markPosition > 1) {
-        markPosition = 1;
+    return _privateSegments;
+}
+
+- (void)setDelegate:(id<SDMultiSegmentBarDelegate>)delegate {
+    _delegate = delegate;
+    [self setupGertureRecognizer];
+}
+
+- (void)setMarkStyle:(SDMultiSegmentBarMarkStyle)markStyle {
+    _markStyle = markStyle;
+    [self setupGertureRecognizer];
+}
+
+- (void)setPrivateMarkPosition:(CGFloat)privateMarkPosition {
+    if (privateMarkPosition < 0.0) {
+        privateMarkPosition = 0.0;
     }
-    if (markPosition == _markPosition) {
+    if (privateMarkPosition > 1.0) {
+        privateMarkPosition = 1.0;
+    }
+    if (privateMarkPosition == _privateMarkPosition) {
         return;
     }
-    _markPosition = markPosition;
+    _privateMarkPosition = privateMarkPosition;
     [self setNeedsDisplay];
 }
 
@@ -62,10 +92,64 @@
 }
 
 -(CGFloat)markXPosition {
-    return self.markPosition/self.widthScaleFactor + self.bottomOffset;
+    return self.privateMarkPosition/self.widthScaleFactor + self.bottomOffset;
 }
-#pragma mark - draw methods
 
+- (UIColor *)borderColor {
+    return [UIColor colorWithWhite:0.65 alpha:1];
+}
+
+- (UIColor *)emptyBarColor {
+    return [UIColor colorWithWhite:0.9 alpha:1];
+}
+
+#pragma mark - public methods
+- (void)setSegments:(NSArray *)segments {
+    CGFloat newMarkPosition = 0;
+    for (id segment in segments) {
+        if (![segment isKindOfClass:[SDBarSegment class]]) {
+            return;
+        }
+        SDBarSegment *barSegment = (SDBarSegment*)segment;
+        newMarkPosition += barSegment.value;
+    }
+    self.privateMarkPosition = newMarkPosition;
+    self.privateSegments = [segments mutableCopy];
+    [self setNeedsDisplay];
+}
+
+#pragma mark - gesture recognizer
+- (void) setupGertureRecognizer {
+    self.userInteractionEnabled = NO;
+    if (self.markStyle != SDMultiSegmentBarMarkStylePannable)
+        return;
+    if (![self.delegate respondsToSelector:@selector(annotationTextForMarkPosition:)])
+        return;
+    self.userInteractionEnabled = YES;
+}
+
+- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    self.markPosition = self.privateMarkPosition;
+    [self touchesMoved:touches withEvent:event];
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    CGFloat touchx = [[touches anyObject] locationInView:self].x;
+    self.displayAnnotation = YES;
+    self.privateMarkPosition = self.widthScaleFactor * (touchx - self.bottomOffset);
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
+    self.displayAnnotation = NO;
+    self.privateMarkPosition = self.markPosition;
+}
+
+- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    [self touchesEnded:touches withEvent:event];
+}
+
+
+#pragma mark - draw methods
 - (void) drawRect:(CGRect)rect
 {
 
@@ -77,6 +161,7 @@
     CGContextRestoreGState(context);    // unclups
     //[self drawSeporators];
     [self drawMark];
+    [self drawAnnotation];
 }
 
 - (CGRect) barRectOfWidth:(CGFloat)width startFrom:(CGFloat)start {
@@ -88,16 +173,16 @@
 
 - (void) drawEmptyProgressBar {
     UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:[self barRectOfWidth:1 startFrom:0]
-                                                    cornerRadius:self.bounds.size.height/5];
-    [[UIColor lightGrayColor] setFill];
+                                                    cornerRadius:self.bounds.size.height/6];
+    [self.emptyBarColor setFill];
     [path fill];
     [path addClip];
 }
 
 - (void) drawProgressBarBorder {
     UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:[self barRectOfWidth:1 startFrom:0]
-                                                    cornerRadius:self.bounds.size.height/5];
-    [[UIColor darkGrayColor] setStroke];
+                                                    cornerRadius:self.bounds.size.height/6];
+    [self.borderColor setStroke];
     [path setLineWidth:2];
     [path stroke];
     [path addClip];
@@ -110,21 +195,16 @@
         UIBezierPath *mark = [[UIBezierPath alloc] init];
         [mark moveToPoint:CGPointMake(separatorX, 0)];
         [mark addLineToPoint:CGPointMake(separatorX, self.bounds.size.height)];
-        [[UIColor darkGrayColor] setStroke];
+        [self.borderColor setStroke];
         [mark stroke];
     }
 }
 
 - (void) drawProgressSegments {
     CGFloat offset = 0;
-    for (int i=0; i<[self.progressSegments count]; i++) {
-        CGFloat segmentWigth = [(NSNumber*)(self.progressSegments[i]) floatValue];
-        
-        UIColor *progressSegmentColor = [UIColor blueColor];
-        if ([self.progressSegmentColors count]>i && [self.progressSegmentColors[i] isKindOfClass:[UIColor class]]) {
-            progressSegmentColor = self.progressSegmentColors[i];
-        }
-        
+    for (SDBarSegment *segment in self.privateSegments) {
+        CGFloat segmentWigth = segment.value;
+        UIColor *progressSegmentColor = segment.color ? segment.color : [UIColor blueColor];
         [self drawProgressSegmentOfWidth:segmentWigth startFrom:offset whthColor:progressSegmentColor];
         offset += segmentWigth;
     }
@@ -137,8 +217,8 @@
 }
 
 - (void) drawMark {
-    [[UIColor darkGrayColor] setStroke];
-    [[UIColor darkGrayColor] setFill];
+    [self.borderColor setStroke];
+    [self.borderColor setFill];
     
     UIBezierPath *mark = [[UIBezierPath alloc] init];
     [mark moveToPoint:CGPointMake(self.markXPosition, self.topOffset)];
@@ -154,10 +234,17 @@
 }
 
 - (void) drawAnnotation {
-    NSString *annotationText = [self.delegate annotationTextForMarkPosition:self.markPosition];
-    if (!annotationText) {
-        annotationText = [NSString stringWithFormat:@"%f", self.markPosition];  // for testing !!!
-    }
+    if (!self.displayAnnotation)
+        return;
+    NSString *annotationText = [self.delegate annotationTextForMarkPosition:self.privateMarkPosition];
+    NSDictionary *attributes = @{NSFontAttributeName: [UIFont fontWithName:@"Verdana" size:[self topOffset]*0.7],
+                                 NSForegroundColorAttributeName: self.borderColor};
+    CGSize annotationSize = [annotationText sizeWithAttributes:attributes];
+    CGFloat pointX = (self.markXPosition - annotationSize.width/2);
+    pointX = pointX < 0.0 ? 0 : pointX;
+    pointX = pointX > (self.bounds.size.width - annotationSize.width) ? self.bounds.size.width - annotationSize.width : pointX;
+    
+    [annotationText drawAtPoint:CGPointMake(pointX, 0) withAttributes:attributes];
 }
 
 @end

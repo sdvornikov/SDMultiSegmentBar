@@ -5,12 +5,23 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SDMultiSegmentBarDelegate.h"
+#import "SDBarSegment.h"
+
+@protocol SDMultiSegmentBarDelegate <NSObject>
+- (NSString*) annotationTextForMarkPosition:(float)position;
+@end
+
+typedef NS_ENUM(NSInteger, SDMultiSegmentBarMarkStyle) {
+    SDMultiSegmentBarMarkStyleNone,
+    SDMultiSegmentBarMarkStyleStatic,
+    SDMultiSegmentBarMarkStylePannable,
+};
 
 @interface SDMultiSegmentBar : UIView
-@property (strong,nonatomic) NSArray *progressSegments;         // of NSNumbers with float values
-@property (strong,nonatomic) NSArray *progressSegmentColors;    // of UIColors
+@property (nonatomic) SDMultiSegmentBarMarkStyle markStyle;
 @property (nonatomic) float markPosition;
 @property (weak,nonatomic) id<SDMultiSegmentBarDelegate> delegate;
+
+- (void) setSegments:(NSArray*)segments;
 
 @end

@@ -16,13 +16,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UZg-3B-Fu8" customClass="SDMultiSegmentBar">
-                                <rect key="frame" x="20" y="283" width="280" height="50"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UZg-3B-Fu8" customClass="SDMultiSegmentBar">
+                                <rect key="frame" x="20" y="165" width="280" height="40"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="y79-EG-FHi"/>
+                                </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.95021654211956519" green="0.95021654211956519" blue="0.95021654211956519" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="UZg-3B-Fu8" secondAttribute="trailing" constant="20" id="Vd9-Mh-w9B"/>
+                            <constraint firstItem="UZg-3B-Fu8" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="X9H-n3-AbC"/>
+                            <constraint firstItem="UZg-3B-Fu8" firstAttribute="top" secondItem="SwO-B6-OPh" secondAttribute="bottom" constant="145" id="amI-py-tp6"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="multiSegmentBar" destination="UZg-3B-Fu8" id="Kb2-0c-8DS"/>
