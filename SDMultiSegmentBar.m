@@ -16,9 +16,9 @@
 @property (readonly,nonatomic) CGFloat markXPosition;
 
 @property (nonatomic) CGFloat privateMarkPosition;
-@property (nonatomic) BOOL displayAnnotation;
 @property (readonly,nonatomic) UIColor *borderColor;
 @property (readonly,nonatomic) UIColor *emptyBarColor;
+@property (nonatomic) BOOL touchInProgress;
 
 @end
 
@@ -135,12 +135,12 @@
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     CGFloat touchx = [[touches anyObject] locationInView:self].x;
-    self.displayAnnotation = YES;
+    self.touchInProgress = YES;
     self.privateMarkPosition = self.widthScaleFactor * (touchx - self.bottomOffset);
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    self.displayAnnotation = NO;
+    self.touchInProgress = NO;
     self.privateMarkPosition = self.markPosition;
 }
 
@@ -217,6 +217,11 @@
 }
 
 - (void) drawMark {
+    if (self.markStyle == SDMultiSegmentBarMarkStyleNone)
+        return;
+    if (self.hideStaticMark && !self.touchInProgress)
+        return;
+    
     [self.borderColor setStroke];
     [self.borderColor setFill];
     
@@ -234,7 +239,7 @@
 }
 
 - (void) drawAnnotation {
-    if (!self.displayAnnotation)
+    if (!self.touchInProgress)
         return;
     NSString *annotationText = [self.delegate annotationTextForMarkPosition:self.privateMarkPosition];
     NSDictionary *attributes = @{NSFontAttributeName: [UIFont fontWithName:@"Verdana" size:[self topOffset]*0.7],

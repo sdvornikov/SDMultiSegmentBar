@@ -23,7 +23,7 @@
     [self.multiSegmentBar setSegments:@[[SDBarSegment barSegmentWithValue:0.1 color:[UIColor redColor]],
                                         [SDBarSegment barSegmentWithValue:0.3 color:[UIColor greenColor]],
                                         [SDBarSegment barSegmentWithValue:0.07 color:[UIColor yellowColor]]]];
-    //self.multiSegmentBar.markPosition = 0.47;
+    self.multiSegmentBar.hideStaticMark = YES;
     self.multiSegmentBar.markStyle = SDMultiSegmentBarMarkStylePannable;
 }
 

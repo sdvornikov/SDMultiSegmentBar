@@ -19,6 +19,7 @@ typedef NS_ENUM(NSInteger, SDMultiSegmentBarMarkStyle) {
 
 @interface SDMultiSegmentBar : UIView
 @property (nonatomic) SDMultiSegmentBarMarkStyle markStyle;
+@property (nonatomic) BOOL hideStaticMark;
 @property (nonatomic) float markPosition;
 @property (weak,nonatomic) id<SDMultiSegmentBarDelegate> delegate;
 
