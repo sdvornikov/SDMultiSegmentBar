@@ -48,6 +48,11 @@
     self.privateMarkPosition = markPosition;
 }
 
+- (void)setHideStaticMark:(BOOL)hideStaticMark {
+    _hideStaticMark = hideStaticMark;
+    [self setNeedsDisplay];
+}
+
 - (NSMutableArray *)privateSegments {
     if (!_privateSegments) {
         _privateSegments = [NSMutableArray array];
